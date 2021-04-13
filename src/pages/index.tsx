@@ -1,12 +1,29 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Container } from '@material-ui/core'
+import { Nav } from '../components/molecules'
+import { Equalizer, Settings } from '@material-ui/icons'
+
+const navList = [
+  {
+    key: 'reports',
+    value: 'Reports',
+    icon: <Equalizer></Equalizer>
+  },
+  {
+    key: 'settings',
+    value: 'Settings',
+    icon: <Settings></Settings>
+  }
+]
 
 const Home: React.FC = () => {
   return (
-    <div>
-      <h1> HIII </h1>
-      <Button variant="contained" color="primary"> HELLO WORLD</Button>
-    </div>
+    <Container>
+      <Nav
+        label="RosterApp"
+        items={navList}
+        />
+    </Container>
   )
 }
 
