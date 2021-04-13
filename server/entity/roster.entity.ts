@@ -1,10 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
 import {
-    IsDecimal,
     IsString,
     IsInt,
     IsOptional,
-    IsNumber
+    IsNumber,
+    IsDate
   } from 'class-validator'
 
 @Entity()
@@ -13,15 +13,27 @@ export class Roster {
     @IsOptional()
     id: number;
 
-    @Column()
+    @Column({ nullable: false })
     @IsString()
     artist: string;
 
-    @Column("decimal", { precision: 8, scale: 5 })
+    @Column("decimal", { precision: 8, scale: 5, nullable: false})
     @IsNumber()
     rate: number;
 
-    @Column()
+    @Column({ nullable: false })
     @IsInt()
     streams: number;
+
+    @CreateDateColumn({ type: 'timestamp' })
+    @IsDate()
+    createdAt: Date;
+
+    @UpdateDateColumn({ type: 'timestamp' })
+    @IsDate()
+    updatedAt: Date;
+
+    @DeleteDateColumn({ type: 'timestamp' })
+    @IsDate()
+    deletedAt: Date;
 }
