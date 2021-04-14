@@ -27,7 +27,7 @@ const init = async () => {
     app.all('*', (req: Request, res: Response) => handle(req, res))
     
     app.listen(port, () => {
-      console.log(`> Sever ready on ${process.env.NODE_ENV} - ${dev ? `localhost:${port}` : `${host}`}`)
+      console.log(`> Ready on ${process.env.NODE_ENV} - ${dev ? `localhost:${port}` : `${host}`}`)
     })
   })
 }
