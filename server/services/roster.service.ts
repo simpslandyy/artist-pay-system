@@ -53,6 +53,49 @@ export default class RosterService {
   /**
    * Update
    * @param id - number, a unique identifer of Roster record
+   * @param rate - number, the new rate for the artist with id `id`
+   * @returns Roster, updated roster record
+   */
+   public async updateRateById(id: string, rate: number): Promise<Roster> {
+    try {
+      if (!this.connection || !this.repository) await this.connect()
+      const roster = await this.repository.findOne(id)
+
+      if (!roster) throw `No roster member with id: ${id} found`
+
+      roster.rate = rate
+      await this.repository.save(roster)
+      return roster
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * Update
+   * @param id - number, a unique identifer of Roster record
+   * @param rate - number, the new rate for the artist with id `id`
+   * @returns Roster, updated roster record
+   */
+   public async updatePaidById(id: string, paid: boolean): Promise<Roster> {
+    try {
+      if (!this.connection || !this.repository) await this.connect()
+      const roster = await this.repository.findOne(id)
+
+      if (!roster) throw `No roster member with id: ${id} found`
+
+      roster.paid = paid
+      await this.repository.save(roster)
+      return roster
+    } catch (err) {
+      throw err
+    }
+  }
+  
+
+  /**
+   * Update
+   * @param id - number, a unique identifer of Roster record
    * @param updatedRoster - Roster, a single Roster record representing the changes to be made to existing Roster record
    * @returns Roster, updated roster record
    */
@@ -66,6 +109,7 @@ export default class RosterService {
       roster.rate = updatedRoster.rate || roster.rate
       roster.streams = updatedRoster.streams || roster.streams
       roster.artist = updatedRoster.artist || roster.artist
+      roster.paid = updatedRoster.paid || roster.paid
 
       await this.repository.save(roster)
       return roster

@@ -1,3 +1,3 @@
-import Nav from './nav'
+import AppWrapper from './app-wrapper'
 
-export { Nav }
+export { AppWrapper }

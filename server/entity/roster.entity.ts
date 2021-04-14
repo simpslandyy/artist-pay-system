@@ -4,7 +4,8 @@ import {
     IsInt,
     IsOptional,
     IsNumber,
-    IsDate
+    IsDate,
+    IsBoolean
   } from 'class-validator'
 
 @Entity()
@@ -22,8 +23,12 @@ export class Roster {
     rate: number;
 
     @Column({ nullable: false })
-    @IsInt()
+    @IsNumber()
     streams: number;
+
+    @Column({ default: true })
+    @IsBoolean()
+    paid: boolean;
 
     @CreateDateColumn({ type: 'timestamp' })
     @IsDate()
