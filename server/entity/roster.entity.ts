@@ -26,7 +26,7 @@ export class Roster {
     @IsNumber()
     streams: number;
 
-    @Column({ default: true })
+    @Column({ default: false })
     @IsBoolean()
     paid: boolean;
 

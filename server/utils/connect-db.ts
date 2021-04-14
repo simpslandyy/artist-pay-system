@@ -1,23 +1,36 @@
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { createConnection, getConnectionOptions, ConnectionOptions } from "typeorm";
+
+const getDBConnectionOptions = async () => {
+    console.log(`> Attempting connection ...`)
+    if (!process.env.CLEARDB_DATABASE_URL)  return await getConnectionOptions()
+    const connectionOptions: ConnectionOptions = {
+        type: 'mysql',
+        synchronize: false,
+        logging: false,
+        extra: {
+        ssl: true,
+        },
+        migrationsRun: true,
+        entities: ['server/entity/**/*.ts'],
+        migrations: ['server/migration/**/*.ts']
+    }
+        
+    Object.assign(connectionOptions, { url: process.env.CLEARDB_DATABASE_URL });
+    return connectionOptions
+}
 
 const connectDb = async () => {
-    if (!process.env.DB_CONNECTION) {
-        console.error(`> DB environment variables not found, cannot establish connection`)
-        return
-    }
-
     try {
-        console.log(`> DB environment variables found, attempting connection to ${process.env.DB_NAME}`)
-        await createConnection()
+        const options = await getDBConnectionOptions()
+        await createConnection(options)
+
         console.log(
-            `> Successfully connected to ${process.env.DB_CONNECTION} database,\
-            ${process.env.DB_NAME} on port ${process.env.DB_PORT}`
+            `> Successfully connected to database`
         )
     } catch (err) {
         console.error(
-            `> Connection failed to ${process.env.DB_CONNECTION} database,\ 
-            ${process.env.DB_NAME} on port ${process.env.DB_PORT} \n ${JSON.stringify(err)}`
+            `> Connection failed to database \n ${JSON.stringify(err)}`
         )
     }
 }
