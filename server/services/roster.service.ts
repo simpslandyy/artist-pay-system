@@ -61,7 +61,7 @@ export default class RosterService {
       if (!this.connection || !this.repository) await this.connect()
       const roster = await this.repository.findOne(id)
 
-      if (!roster) throw `No roster member with id: ${id} found`
+      if (!roster) return null
 
       roster.rate = rate
       await this.repository.save(roster)
@@ -81,8 +81,7 @@ export default class RosterService {
     try {
       if (!this.connection || !this.repository) await this.connect()
       const roster = await this.repository.findOne(id)
-
-      if (!roster) throw `No roster member with id: ${id} found`
+      if (!roster) return null
 
       roster.paid = paid
       await this.repository.save(roster)
@@ -103,8 +102,7 @@ export default class RosterService {
     try {
       if (!this.connection || !this.repository) await this.connect()
       const roster = await this.repository.findOne(id)
-
-      if (!roster) throw `No roster member with id: ${id} found`
+      if (!roster) return null
 
       roster.rate = updatedRoster.rate || roster.rate
       roster.streams = updatedRoster.streams || roster.streams
@@ -143,7 +141,7 @@ export default class RosterService {
   public async delete(id: string) {
     try {
       if (!this.connection || !this.repository) await this.connect()
-      await this.repository.delete(id)
+      await this.repository.softDelete(id)
     } catch (err) {
       throw err
     }

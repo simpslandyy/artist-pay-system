@@ -1,7 +1,7 @@
 import RosterService from '../services/roster.service'
 import { Roster } from '../entity/roster.entity'
 import express, { Request, Response } from 'express'
-import { body, param } from 'express-validator'
+import { body, param, query } from 'express-validator'
 
 const router = express.Router()
 
@@ -12,7 +12,7 @@ router.get('/', async (_, res: Response) => {
     const response = await service.getAll()
     res.json({ length: response.length, data: response })
   } catch (err) {
-    // error handle later
+    res.status(500).send('Unable to fulfill request.')
   }
 
 })
@@ -27,7 +27,7 @@ router.get('/:id',
 
       res.json({ data: roster })
     } catch (err) {
-      // error handle later
+      res.status(500).send('Unable to fulfill request.')
     }
   })
 
@@ -48,8 +48,60 @@ router.post('/',
       await service.insert(payload)  
       res.send(`Successfully added ${payload.length} items`)
     } catch (err) {
-      // error handle later
+      res.status(500).send('Unable to fulfill request.')
     }
   })
 
+router.delete('/:id',
+  param('id').isString(),
+  async (req: Request, res: Response) => {
+    try {
+      const service = new RosterService()
+      const { id } = req.params
+      await service.delete(id)
+
+      res.send(`Successfully deleted ${id}`)
+    } catch (err) {
+      res.status(500).send('Unable to fulfill request.')
+    }
+})
+
+router.patch('/deleteBulk', 
+  body('ids').isArray(),
+  async (req: Request, res: Response) => {
+    try {
+      const service = new RosterService()
+      const { ids } = req.body
+    
+      const results:Roster[] = []
+      for(let id of ids) {
+        await service.delete(id)  
+      }
+
+      res.send(`Successfully deleted ${results.length} records`)
+    } catch (err) {
+      res.status(500).send('Unable to fulfill request.')
+    }
+  })
+
+router.patch('/updatePayment', 
+  body('ids').isArray(),
+  query('isPaid').isString(),
+  async (req: Request, res: Response) => {
+    try {
+      const service = new RosterService()
+      const { ids } = req.body
+      const isPaid = req.query?.isPaid && req.query?.isPaid === 'true' ? true : false
+    
+      const results:Roster[] = []
+      for(let id of ids) {
+        const resp = await service.updatePaidById(id, isPaid)  
+        results.push(resp)
+      }
+
+      res.send(`Successfully updated ${results.length} payments.`)
+    } catch (err) {
+      res.status(500).send('Unable to fulfill request.')
+    }
+  })
 export default router
