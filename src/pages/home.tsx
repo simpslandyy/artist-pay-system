@@ -55,8 +55,8 @@ const Home: React.FC = () => {
   const handleDelete = async () => {
     try {
       await axios.patch(`/api/v1/roster/deleteBulk`, { ids: selectedRows })
+      await fetchData()
       setAlert({severity: 'success', message: `Successfully deleted ${selectedRows.length} records`})
-      console.log(`Deleting the following ${JSON.stringify(selectedRows)}`)
     } catch (err) {
       setAlert({severity: 'error', message: `Unable to delete ${selectedRows.length} records. Please try again later.`})
     }
@@ -72,7 +72,6 @@ const Home: React.FC = () => {
       await axios.patch(`/api/v1/roster/updatePayment?isPaid=${isPaid}`, { ids: selectedRows })
       await fetchData()
       setAlert({severity: 'success', message: `Successfully updated ${selectedRows.length} records`})
-      console.log(`Updating the following ${JSON.stringify(selectedRows)}`)
     } catch(err) {
       setAlert({severity: 'error', message: `Unable to update ${selectedRows.length} records. Please try again later.`})
     }
