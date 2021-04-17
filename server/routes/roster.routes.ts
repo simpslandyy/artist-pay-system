@@ -92,14 +92,9 @@ router.patch('/updatePayment',
       const service = new RosterService()
       const { ids } = req.body
       const isPaid = req.query?.isPaid && req.query?.isPaid === 'true' ? true : false
-    
-      const results:Roster[] = []
-      for(let id of ids) {
-        const resp = await service.updatePaidById(id, isPaid)  
-        results.push(resp)
-      }
+      await service.updatePaidByMultipleIds(ids, isPaid)
 
-      res.send(`Successfully updated ${results.length} payments.`)
+      res.send(`Successfully updated ${ids.length} payments.`)
     } catch (err) {
       res.status(500).send('Unable to fulfill request.')
     }

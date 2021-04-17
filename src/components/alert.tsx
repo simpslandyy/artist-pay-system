@@ -11,11 +11,10 @@ interface AlertProps {
 
 const Alert: React.FC<AlertProps> = ({ show, onClose, type, message }) => {
   return (
-    <Snackbar autoHideDuration={5000} open={show} onClose={onClose}>
+    <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center'}} autoHideDuration={5000} open={show} onClose={onClose}>
       <MuiAlert onClose={onClose} severity={type}>
         { message }
       </MuiAlert>
-
     </Snackbar>
   )
 }

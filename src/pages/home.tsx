@@ -1,16 +1,16 @@
 import React from 'react'
-import { TableHeader, Alert } from '../components'
+import { TableHeader, Alert, LoadingBar } from '../components'
 import { Container, IconButton, Paper, Tooltip } from '@material-ui/core'
 import { DataGrid } from '@material-ui/data-grid';
 import { makeStyles } from '@material-ui/core/styles'
 import { AttachMoney, MoneyOff } from '@material-ui/icons'
 import { getColumnConfig } from '../utils'
-
 import axios from 'axios'
 
 const useStyles = makeStyles(() => ({
   tableRoot: {
-    display: 'flex'
+    display: 'flex',
+    marginTop: '4rem'
   },
   table: {
     height: 400,
@@ -22,6 +22,9 @@ const useStyles = makeStyles(() => ({
   paidChip: {
     color: 'green',
     borderColor: 'green'
+  },
+  footer: {
+    backgroundColor: '#FFFFFF'
   }
 }))
 
@@ -32,6 +35,7 @@ const Home: React.FC = () => {
   const [data, setData] = React.useState(null)
   const [selectedRows, setSelected] = React.useState([])
   const [showAlert, setAlert] = React.useState({ severity: '', message: ''})
+  const [loading, setLoading] = React.useState(true)
 
   /** Column configuration for the table */
   const columns = getColumnConfig(classes)
@@ -40,12 +44,18 @@ const Home: React.FC = () => {
    * Fetch data from the server
    */
   const fetchData = async () => {
+    setLoading(true)
     try {
       const response = await axios.get('/api/v1/roster')
       const { data } = response?.data
       setData(data)
+      setLoading(false)
     } catch (err) {
-      setAlert({severity: 'error', message: `Unable to fetch records. Please try again later.`})
+      setLoading(false)
+      setAlert({
+        severity: 'error', 
+        message: `Unable to fetch records. Please try again later.`
+      })
     }
   }
 
@@ -53,12 +63,21 @@ const Home: React.FC = () => {
    * Handle when user selects delete on selected items
    */
   const handleDelete = async () => {
+    setLoading(true)
     try {
       await axios.patch(`/api/v1/roster/deleteBulk`, { ids: selectedRows })
+      setAlert({
+        severity: 'success',
+        message: `Successfully deleted ${selectedRows.length} records`
+      })
       await fetchData()
-      setAlert({severity: 'success', message: `Successfully deleted ${selectedRows.length} records`})
+      setLoading(false)
     } catch (err) {
-      setAlert({severity: 'error', message: `Unable to delete ${selectedRows.length} records. Please try again later.`})
+      setLoading(false)
+      setAlert({
+        severity: 'error', 
+        message: `Unable to delete ${selectedRows.length} records. Please try again later.`
+      })
     }
   }
 
@@ -68,12 +87,21 @@ const Home: React.FC = () => {
    */
   const handleUpdate = async (type: 'cancel' | 'payout') => {
     const isPaid = type === 'payout'
+    setLoading(true)
     try {
       await axios.patch(`/api/v1/roster/updatePayment?isPaid=${isPaid}`, { ids: selectedRows })
+      setAlert({
+        severity: 'success', 
+        message: `Successfully updated ${selectedRows.length} records`
+      })
       await fetchData()
-      setAlert({severity: 'success', message: `Successfully updated ${selectedRows.length} records`})
+      setLoading(false)
     } catch(err) {
-      setAlert({severity: 'error', message: `Unable to update ${selectedRows.length} records. Please try again later.`})
+      setLoading(false)
+      setAlert({
+        severity: 'error', 
+        message: `Unable to update ${selectedRows.length} records. Please try again later.`
+      })
     }
   }
 
@@ -81,14 +109,14 @@ const Home: React.FC = () => {
     fetchData()
   }, [])
 
-
   return (
     <Container className={classes.tableRoot}>
-      { showAlert.severity && <Alert 
-        show={!!showAlert}
-        onClose={() => setAlert({severity: '', message: ''})}
-        type={showAlert.severity as any}
-        message={showAlert.message} /> }
+      { showAlert.severity && 
+        <Alert 
+          show={!!showAlert}
+          onClose={() => setAlert({severity: '', message: ''})}
+          type={showAlert.severity as any}
+          message={showAlert.message} /> }
 
       <Paper className={classes.table}>
         <TableHeader 
@@ -111,10 +139,15 @@ const Home: React.FC = () => {
            </>
           }
           />
-        { data && <DataGrid 
+        { data && 
+        <DataGrid 
+          loading={loading}
           rows={data}
           columns={columns}
           pageSize={5}
+          components={{
+            LoadingOverlay: LoadingBar,
+          }}
           sortModel={[
             { field: 'id', sort: 'asc' },
             { field: 'artist', sort: 'asc'  },

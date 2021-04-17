@@ -1,5 +1,5 @@
 
-import { Repository, Connection, getConnection } from 'typeorm'
+import { Repository, Connection, getConnection, In } from 'typeorm'
 import { Roster } from '../entity/roster.entity'
 
 /**
@@ -74,7 +74,7 @@ export default class RosterService {
   /**
    * Update
    * @param id - number, a unique identifer of Roster record
-   * @param rate - number, the new rate for the artist with id `id`
+   * @param paid - boolean, determines what the paid status should be
    * @returns Roster, updated roster record
    */
    public async updatePaidById(id: string, paid: boolean): Promise<Roster> {
@@ -91,6 +91,25 @@ export default class RosterService {
     }
   }
   
+   /**
+   * Update
+   * @param ids - list of ids, a list of unique identifers
+   * @param paid - number, the new rate for the artist with id `id`
+   */
+    public async updatePaidByMultipleIds(ids: string[], paid: boolean) {
+      try {
+        if (!this.connection || !this.repository) await this.connect()
+        await this.connection
+          .createQueryBuilder()
+          .update(Roster)
+          .set({ paid: paid })
+          .where({ id: In(ids)})
+          .execute()
+      } catch (err) {
+        throw err
+      }
+    }
+    
 
   /**
    * Update
@@ -123,7 +142,7 @@ export default class RosterService {
   public async insert(payload: Roster[]) {
     try {
       if (!this.connection || !this.repository) await this.connect()
-      this.connection
+      await this.connection
         .createQueryBuilder()
         .insert()
         .into(Roster)
