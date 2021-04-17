@@ -84,6 +84,30 @@ router.patch('/deleteBulk',
     }
   })
 
+router.patch('/update/:id', 
+  param('id').isString(),
+  body('data').isObject(),
+  async (req: Request, res: Response) => {
+    try {
+      const service = new RosterService()
+      const { id } = req.params
+      const { data } = req.body
+  
+      let roster = new Roster()
+      roster = Object.assign(roster, data)
+      if (!roster) {
+        res.status(400).send(`Roster ${id} does not exist`)
+      }
+
+      const updatedRoster = await service.update(id, roster)
+      res.json({data: updatedRoster})
+    } catch (err) {
+      res.status(500).send('Unable to fulfill request.')
+    }
+  })
+
+
+
 router.patch('/updatePayment', 
   body('ids').isArray(),
   query('isPaid').isString(),

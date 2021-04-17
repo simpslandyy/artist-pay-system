@@ -81,7 +81,7 @@ export default class RosterService {
     try {
       if (!this.connection || !this.repository) await this.connect()
       const roster = await this.repository.findOne(id)
-      if (!roster) return null
+      if (!roster || roster.deletedAt) return null
 
       roster.paid = paid
       await this.repository.save(roster)
@@ -121,7 +121,7 @@ export default class RosterService {
     try {
       if (!this.connection || !this.repository) await this.connect()
       const roster = await this.repository.findOne(id)
-      if (!roster) return null
+      if (!roster || roster.deletedAt) return null
 
       roster.rate = updatedRoster.rate || roster.rate
       roster.streams = updatedRoster.streams || roster.streams

@@ -72,8 +72,10 @@ const Home: React.FC = () => {
       })
       await fetchData()
       setLoading(false)
+      setSelected([])
     } catch (err) {
       setLoading(false)
+      setSelected([])
       setAlert({
         severity: 'error', 
         message: `Unable to delete ${selectedRows.length} records. Please try again later.`
@@ -95,9 +97,11 @@ const Home: React.FC = () => {
         message: `Successfully updated ${selectedRows.length} records`
       })
       await fetchData()
+      setSelected([])
       setLoading(false)
     } catch(err) {
       setLoading(false)
+      setSelected([])
       setAlert({
         severity: 'error', 
         message: `Unable to update ${selectedRows.length} records. Please try again later.`
