@@ -7,7 +7,7 @@
     },
    "scripts": {
       "dev": "nodemon",
-      "build": "next build",
+      "build": "next build && typeorm migration:run",
       "start": "nodemon",
       "typeorm": "yarn ts-node node_modules/.bin/typeorm"
    },
