@@ -11,9 +11,7 @@ export class AddArtists1673490552040 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        for(let d of data) {
-            await queryRunner.query(`TRUNCATE 'roster;`)
-        }
+        await queryRunner.query(`TRUNCATE 'roster;`)
     }
 
 }
