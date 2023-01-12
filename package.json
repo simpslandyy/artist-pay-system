@@ -7,7 +7,7 @@
     },
    "scripts": {
       "dev": "nodemon",
-      "build": "next build && typeorm migration:run",
+      "build": "next build",
       "start": "nodemon",
       "typeorm": "yarn ts-node node_modules/.bin/typeorm",
       "typeorm:win": "yarn ts-node -r tsconfig-paths/register node_modules\\typeorm\\cli.js",
