@@ -7,9 +7,9 @@ import rosterRouter from './routes/roster.routes'
 
 dotenv.config()
 
-const port = process.env.PORT
-const host = process.env.HOST
-const apiPath = process.env.API_PATH
+const port = process.env.PORT || 5000
+const host = process.env.HOST || 'localhost'
+const apiPath = process.env.API_PATH || '/api/v1'
 const dev = !process.env.NODE_ENV || process.env.NODE_ENV !== 'production'
 
 const init = async () => {
