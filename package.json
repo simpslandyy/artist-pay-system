@@ -2,6 +2,9 @@
    "name": "roster-app",
    "version": "0.1.0",
    "private": true,
+   "engines": {
+      "node": "14.17.1"
+    },
    "scripts": {
       "dev": "nodemon",
       "build": "next build",
