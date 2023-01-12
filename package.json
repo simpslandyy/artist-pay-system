@@ -9,7 +9,9 @@
       "dev": "nodemon",
       "build": "next build && typeorm migration:run",
       "start": "nodemon",
-      "typeorm": "yarn ts-node node_modules/.bin/typeorm"
+      "typeorm": "yarn ts-node node_modules/.bin/typeorm",
+      "typeorm:win": "yarn ts-node -r tsconfig-paths/register node_modules\\typeorm\\cli.js",
+      "migration:create:win": "npm run typeorm:win migration:create -- -n"
    },
    "dependencies": {
       "@material-ui/core": "^4.11.3",

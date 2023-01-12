@@ -1,4 +1,4 @@
-{
+export default {
   "data": [
     {"artist": "Pearl Jam", "rate": 0.004, "streams": 10284436},
     {"artist": "The Beatles", "rate": 0.00735, "streams": 23300412},
